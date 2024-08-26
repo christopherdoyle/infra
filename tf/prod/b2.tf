@@ -25,6 +25,9 @@ provider "b2" {
   application_key_id = var.b2_application_key_id
 }
 
+data "b2_account_info" "main" {
+}
+
 resource "random_string" "ente_bucket_stub" {
   length           = 32
   special          = true
@@ -43,6 +46,10 @@ resource "b2_application_key" "ente" {
   key_name     = "ente-key"
   capabilities = ["deleteFiles", "listBuckets", "listFiles", "readBuckets", "readFiles", "shareFiles", "writeFiles"]
   bucket_id    = b2_bucket.ente.bucket_id
+}
+
+output "ente_url" {
+  value = "${data.b2_account_info.main.s3_api_url}/${b2_bucket.ente.bucket_name}"
 }
 
 output "ente_application_key_id" {
