@@ -13,10 +13,8 @@
   roles:
     - role: geerlingguy.git
     - role: geerlingguy.docker
+    - role: geerlingguy.repo-epel
 
   tasks:
     - import_tasks: tasks/utils.yml
     - import_tasks: tasks/install-btop.yml
-  #   - import_tasks: tasks/create-docker-network.yml
-  #   - import_tasks: tasks/install-lazydocker.yml
-  #   - import_tasks: tasks/install-nginx.yml
