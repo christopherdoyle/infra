@@ -1,0 +1,22 @@
+- name: Setup new server with Docker & Nginx
+
+  hosts: all
+
+  become: true
+
+  gather_facts: yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/timezone.yml
+
+  roles:
+    - role: geerlingguy.git
+    - role: geerlingguy.docker
+
+  tasks:
+    - import_tasks: tasks/utils.yml
+    - import_tasks: tasks/install-btop.yml
+  #   - import_tasks: tasks/create-docker-network.yml
+  #   - import_tasks: tasks/install-lazydocker.yml
+  #   - import_tasks: tasks/install-nginx.yml

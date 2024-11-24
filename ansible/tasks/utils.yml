@@ -1,0 +1,13 @@
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ tz }}"
+
+- name: Install net-tools
+  ansible.builtin.dnf:
+    name: net-tools
+    state: latest
+
+- name: Install wget
+  ansible.builtin.dnf:
+    name: wget
+    state: latest

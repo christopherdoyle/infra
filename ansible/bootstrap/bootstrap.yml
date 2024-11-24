@@ -1,0 +1,4 @@
+- name: Boostrap
+  hosts: all
+  roles:
+    - bootstrap

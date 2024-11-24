@@ -1,0 +1,6 @@
+- name: Install btop
+  ansible.builtin.dnf:
+    name:
+      - epl-release
+      - btop
+    state: latest
