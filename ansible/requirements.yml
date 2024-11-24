@@ -2,3 +2,5 @@ roles:
   - name: geerlingguy.docker
   - name: geerlingguy.git
   - name: geerlingguy.repo-epel
+  - name: geerlingguy.nginx
+  - name: devsec.hardening

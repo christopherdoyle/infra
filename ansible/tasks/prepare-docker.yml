@@ -1,0 +1,7 @@
+- name: Prepare docker
+  ansible.builtin.file:
+    path: /apps
+    owner: root
+    group: root
+    mode: '0600'
+    state: directory

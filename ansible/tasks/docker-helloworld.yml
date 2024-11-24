@@ -1,0 +1,15 @@
+- name: Copy helloworld folder
+  ansible.builtin.copy:
+    src: ./docker/helloworld
+    dest: /apps/helloworld
+    mode: 0700
+
+- name: Shutdown service
+  ansible.builtin.shell: |
+    cd /apps/helloworld
+    docker compose down
+
+- name: Start service
+  shell: |
+    cd /apps/helloworld
+    docker compose up -d
