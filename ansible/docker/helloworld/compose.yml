@@ -4,4 +4,4 @@ services:
     image: hashicorp/http-echo
     command: -text="Hello World"
     ports:
-      - "8000:5678"
+      - "127.0.0.1:8000:5678"

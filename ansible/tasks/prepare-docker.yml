@@ -1,7 +1,11 @@
-- name: Prepare docker
+- name: Prepare docker directories
   ansible.builtin.file:
-    path: /apps
+    path: "{{ item }}"
     owner: root
     group: root
     mode: '0600'
     state: directory
+  loop:
+    - /docker
+    - /docker/compose
+    - /docker/volumes

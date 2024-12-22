@@ -1,15 +1,24 @@
+- name: Create helloworld folders
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  loop:
+    - /docker/compose/helloworld
+    - /docker/volumes/helloworld
+
 - name: Copy helloworld folder
   ansible.builtin.copy:
-    src: ./docker/helloworld
-    dest: /apps/
+    src: ./docker/helloworld/
+    dest: /docker/compose/helloworld/
     mode: 0700
 
 - name: Shutdown service
   ansible.builtin.shell: |
-    cd /apps/helloworld
+    cd /docker/compose/helloworld
     docker compose down
 
 - name: Start service
   shell: |
-    cd /apps/helloworld
+    cd /docker/compose/helloworld
     docker compose up -d
