@@ -1,0 +1,20 @@
+- name: Setup new server with Docker & Nginx
+
+  hosts: all
+
+  become: true
+
+  gather_facts: yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/timezone.yml
+    - vars/dnfautomatic.yml
+
+  tasks:
+    - import_tasks: tasks/utils.yml
+    - import_tasks: tasks/install-btop.yml
+    - import_tasks: tasks/prepare-docker.yml
+    - import_tasks: tasks/docker-helloworld.yml
+    - import_tasks: tasks/start-nginx.yml
+    - import_tasks: tasks/dnf-automatic.yml

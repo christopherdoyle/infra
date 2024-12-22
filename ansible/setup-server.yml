@@ -9,6 +9,7 @@
   vars_files:
     - vars/common.yml
     - vars/timezone.yml
+    - vars/dnfautomatic.yml
 
   roles:
     - role: geerlingguy.git
@@ -20,12 +21,18 @@
         nginx_vhosts:
           - listen: "443 ssl http2"
             server_name: "dev.***REMOVED***.com"
-            server_name_redirect: "www.dev.***REMOVED***.com"
+            state: "present"
             template: "{{ nginx_vhost_template }}"
             extra_parameters: |
+              ssl_certificate /etc/ssl/***REMOVED***.com/***REMOVED***.com.pub;
+              ssl_certificate_key /etc/ssl/***REMOVED***.com/***REMOVED***.com.priv;
+              ssl_protocols TLSv1.2 TLSv1.3;
+              ssl_ciphers HIGH:!aNULL:!MD5;
               location / {
-                proxy_pass http://127.0.0.1:8000
+                proxy_pass http://127.0.0.1:8000;
               }
+        nginx_service_state: stopped
+        nginx_service_enabled: no
 
     - role: devsec.hardening.os_hardening
       vars:
@@ -40,3 +47,5 @@
     - import_tasks: tasks/install-btop.yml
     - import_tasks: tasks/prepare-docker.yml
     - import_tasks: tasks/docker-helloworld.yml
+    - import_tasks: tasks/start-nginx.yml
+    - import_tasks: tasks/dnf-automatic.yml

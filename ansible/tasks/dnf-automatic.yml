@@ -1,0 +1,16 @@
+
+- name: Install dnf-automatic package
+  ansible.builtin.package:
+    name: dnf-automatic
+    state: latest
+
+- name: Deploy dnf-automatic configuration file
+  ansible.builtin.template:
+    src: automatic.conf.j2
+    dest: /etc/dnf/automatic.conf
+    mode: "0644"
+
+- name: Deploy service and timer units
+  ansible.builtin.service:
+    name: dnf-automatic.timer
+    enabled: yes

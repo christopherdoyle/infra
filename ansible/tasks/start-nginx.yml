@@ -1,0 +1,40 @@
+# copy priv and pub keys to nginx
+
+- name: Create SSL directory
+  ansible.builtin.file:
+    path: /etc/ssl/***REMOVED***.com/
+    owner: root
+    group: root
+    mode: '0600'
+    state: directory
+
+- name: Copy SSL key
+  ansible.builtin.copy:
+    src: ./files/***REMOVED***.com.priv
+    dest: /etc/ssl/***REMOVED***.com/
+    mode: '0600'
+
+- name: Copy SSL cert
+  ansible.builtin.copy:
+    src: ./files/***REMOVED***.com.pub
+    dest: /etc/ssl/***REMOVED***.com/
+    mode: '0600'
+
+- name: Start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Allow nginx to listen to 8000
+  community.general.seport:
+    ports: 8000
+    proto: tcp
+    setype: http_port_t
+    state: absent
+
+- name: Allow nginx can network connect
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true

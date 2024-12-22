@@ -3,4 +3,6 @@ roles:
   - name: geerlingguy.git
   - name: geerlingguy.repo-epel
   - name: geerlingguy.nginx
+
+collections:
   - name: devsec.hardening
