@@ -20,6 +20,20 @@
     dest: /etc/ssl/***REMOVED***.com/
     mode: '0600'
 
+- name: Create /var/www/default directory
+  ansible.builtin.file:
+    path: /var/www/default
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Copy default favicon
+  ansible.builtin.copy:
+    src: ./files/favicon.ico
+    dest: /var/www/default/
+    mode: '0644'
+
 - name: Start nginx
   ansible.builtin.service:
     name: nginx

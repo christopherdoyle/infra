@@ -25,6 +25,16 @@ server {
         proxy_set_header   Connection "upgrade";
     }
 
+    location /favicon.ico {
+        log_not_found off;
+        error_page 404 = @default_favicon;
+    }
+
+    location @default_favicon {
+        root /var/www/default;
+        try_files /favicon.ico =404;
+    }
+
 {% if item.extra_parameters is defined %}
     {{ item.extra_parameters|indent(4) }}
 {% endif %}
