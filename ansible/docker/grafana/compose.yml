@@ -1,0 +1,13 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_grafana
+    user: "$UID:$GID"
+    environment:
+      - GF_DEFAULT_INSTANCE_NAME=grafana
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - /docker/volumes/grafana/data:/var/lib/grafana
+    restart: always
+    network_mode: host

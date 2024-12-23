@@ -11,7 +11,7 @@
   ansible.builtin.copy:
     src: ./docker/uptime-kuma/
     dest: /docker/compose/uptime-kuma/
-    mode: 0700
+    mode: 0644
 
 - name: Shutdown service
   ansible.builtin.shell: |

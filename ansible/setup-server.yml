@@ -11,12 +11,15 @@
     - vars/timezone.yml
     - vars/dnfautomatic.yml
     - vars/nginx.yml
+    - vars/firewall.yml
 
   roles:
+    - role: geerlingguy.firewall
     - role: geerlingguy.git
     - role: geerlingguy.docker
     - role: geerlingguy.repo-epel
     - role: geerlingguy.nginx
+    - role: geerlingguy.node_exporter
     - role: devsec.hardening.os_hardening
       vars:
         sysctl_overwrite:
@@ -43,5 +46,7 @@
     - import_tasks: tasks/prepare-docker.yml
     - import_tasks: tasks/docker-helloworld.yml
     - import_tasks: tasks/docker-uptime-kuma.yml
+    - import_tasks: tasks/docker-prometheus.yml
+    - import_tasks: tasks/docker-grafana.yml
     - import_tasks: tasks/start-nginx.yml
     - import_tasks: tasks/dnf-automatic.yml

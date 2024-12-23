@@ -1,24 +1,24 @@
-- name: Create helloworld folders
+- name: Create grafana folders
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: 0700
   loop:
-    - /docker/compose/helloworld
-    - /docker/volumes/helloworld
+    - /docker/compose/grafana
+    - /docker/volumes/grafana
 
-- name: Copy helloworld folder
+- name: Copy grafana folder
   ansible.builtin.copy:
-    src: ./docker/helloworld/
-    dest: /docker/compose/helloworld/
+    src: ./docker/grafana/
+    dest: /docker/compose/grafana/
     mode: 0644
 
 - name: Shutdown service
   ansible.builtin.shell: |
-    cd /docker/compose/helloworld
+    cd /docker/compose/grafana
     docker compose down
 
 - name: Start service
   shell: |
-    cd /docker/compose/helloworld
+    cd /docker/compose/grafana
     docker compose up -d

@@ -8,5 +8,9 @@ nginx_vhosts:
     state: "present"
     template: "proxy.j2"
     proxy_port: 8001
+  - server_name: "grafana.***REMOVED***.com"
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 3000
 nginx_service_state: stopped
 nginx_service_enabled: no

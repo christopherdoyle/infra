@@ -1,3 +1,4 @@
 hosts
 galaxy/
 bootstrap/files/
+.env
