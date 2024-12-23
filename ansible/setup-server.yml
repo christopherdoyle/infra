@@ -19,7 +19,6 @@
     - role: geerlingguy.docker
     - role: geerlingguy.repo-epel
     - role: geerlingguy.nginx
-    - role: geerlingguy.node_exporter
     - role: devsec.hardening.os_hardening
       vars:
         sysctl_overwrite:
@@ -39,6 +38,8 @@
           - Strict-Transport-Security max-age=15768000
         nginx_client_max_body_size: "10k"
         nginx_large_client_header_buffers: "4 2k"
+        # slightly higher (5 to 10) connection limit
+        nginx_limit_conn: default 10
 
   tasks:
     - import_tasks: tasks/utils.yml
