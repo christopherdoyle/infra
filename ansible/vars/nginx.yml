@@ -1,0 +1,12 @@
+nginx_proxy_cache_path: "/var/cache/nginx keys_zone=cache:32m"
+nginx_vhosts:
+  - server_name: "dev.***REMOVED***.com"
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 8000
+  - server_name: "uptime.***REMOVED***.com"
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 8001
+nginx_service_state: stopped
+nginx_service_enabled: no

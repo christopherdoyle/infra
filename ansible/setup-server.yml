@@ -10,26 +10,13 @@
     - vars/common.yml
     - vars/timezone.yml
     - vars/dnfautomatic.yml
+    - vars/nginx.yml
 
   roles:
     - role: geerlingguy.git
     - role: geerlingguy.docker
     - role: geerlingguy.repo-epel
     - role: geerlingguy.nginx
-      vars:
-        nginx_proxy_cache_path: "/var/cache/nginx keys_zone=cache:32m"
-        nginx_vhosts:
-          - server_name: "dev.***REMOVED***.com"
-            state: "present"
-            template: "proxy.j2"
-            proxy_port: 8000
-          - server_name: "uptime.dev.***REMOVED***.com"
-            state: "present"
-            template: "proxy.j2"
-            proxy_port: 8001
-        nginx_service_state: stopped
-        nginx_service_enabled: no
-
     - role: devsec.hardening.os_hardening
       vars:
         sysctl_overwrite:
@@ -37,6 +24,18 @@
           net.ipv4.ip_forward: 1
     - role: devsec.hardening.ssh_hardening
     - role: devsec.hardening.nginx_hardening
+      vars:
+        # small changes from hardening default for more compatability with shit
+        nginx_add_header:  # changes: I removed CSP because it broke uptime-kuma
+          # avoid clickjacking
+          - X-Frame-Options SAMEORIGIN
+          # disable content-type sniffing
+          - X-Content-Type-Options nosniff
+          # XSS filter
+          - X-XSS-Protection "1; mode=block"
+          - Strict-Transport-Security max-age=15768000
+        nginx_client_max_body_size: "10k"
+        nginx_large_client_header_buffers: "4 2k"
 
   tasks:
     - import_tasks: tasks/utils.yml
