@@ -1,0 +1,24 @@
+- name: Create uptime-kuma folders
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  loop:
+    - /docker/compose/uptime-kuma
+    - /docker/volumes/uptime-kuma
+
+- name: Copy uptime-kuma folder
+  ansible.builtin.copy:
+    src: ./docker/uptime-kuma/
+    dest: /docker/compose/uptime-kuma/
+    mode: 0700
+
+- name: Shutdown service
+  ansible.builtin.shell: |
+    cd /docker/compose/uptime-kuma
+    docker compose down
+
+- name: Start service
+  shell: |
+    cd /docker/compose/uptime-kuma
+    docker compose up -d
