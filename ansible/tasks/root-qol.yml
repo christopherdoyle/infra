@@ -1,0 +1,17 @@
+# Root user Quality of Life (QoL) improvements
+
+- name: Copy bashrc
+  ansible.builtin.copy:
+    src: files/bashrc
+    dest: /root/.bashrc
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy vimrc
+  ansible.builtin.copy:
+    src: files/vimrc
+    dest: /root/.vimrc
+    owner: root
+    group: root
+    mode: '0644'

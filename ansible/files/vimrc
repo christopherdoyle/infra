@@ -1,0 +1,26 @@
+" .vimrc
+" Set by Ansible
+
+set encoding=utf-8
+
+set nocompatible
+
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent
+
+set hidden
+set nobackup
+set noswapfile
+
+set number
+set visualbell
+set showmode showcmd
+set showmatch
+set hlsearch incsearch ignorecase smartcase
+
+nnoremap ; :
+nnoremap : ;
+vnoremap ; :
+vnoremap : ;

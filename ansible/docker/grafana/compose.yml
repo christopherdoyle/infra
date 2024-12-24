@@ -3,6 +3,8 @@ services:
     image: grafana/grafana:latest
     container_name: grafana_grafana
     user: "$UID:$GID"
+    ports:
+      - "127.0.0.1:8002:3000"
     environment:
       - GF_DEFAULT_INSTANCE_NAME=grafana
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
@@ -10,4 +12,22 @@ services:
     volumes:
       - /docker/volumes/grafana/data:/var/lib/grafana
     restart: always
-    network_mode: host
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: grafana_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: grafana_node_exporter
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
