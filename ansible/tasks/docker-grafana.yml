@@ -20,11 +20,6 @@
     dest: /docker/compose/grafana/
     mode: 0644
 
-- name: Shutdown service
-  ansible.builtin.shell: |
-    cd /docker/compose/grafana
-    docker compose down
-
 - name: Create docker volume directories
   ansible.builtin.file:
     path: "{{ item }}"
@@ -63,6 +58,11 @@
     line: "DOCKER_USER={{ grafana_user }}:{{ grafana_group }}"
     regexp: "^DOCKER_USER"
     create: false
+
+- name: Shutdown service
+  ansible.builtin.shell: |
+    cd /docker/compose/grafana
+    docker compose down
 
 - name: Start service
   ansible.builtin.shell: |
