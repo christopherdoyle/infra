@@ -12,6 +12,7 @@
     - vars/dnfautomatic.yml
     - vars/nginx.yml
     - vars/firewall.yml
+    - vars/fail2ban.yml
 
   roles:
     - role: geerlingguy.firewall
@@ -40,6 +41,7 @@
         nginx_large_client_header_buffers: "4 2k"
         # slightly higher (5 to 10) connection limit
         nginx_limit_conn: default 10
+    - role: robertdebock.fail2ban
 
   tasks:
     - import_tasks: tasks/utils.yml

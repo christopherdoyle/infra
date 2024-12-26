@@ -1,0 +1,24 @@
+- name: Create fail2ban-exporter folders
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  loop:
+    - /docker/compose/fail2ban-exporter
+    - /docker/volumes/fail2ban-exporter
+
+- name: Copy fail2ban-exporter folder
+  ansible.builtin.copy:
+    src: ./docker/fail2ban-exporter/
+    dest: /docker/compose/fail2ban-exporter/
+    mode: 0644
+
+- name: Shutdown service
+  ansible.builtin.shell: |
+    cd /docker/compose/fail2ban-exporter
+    docker compose down
+
+- name: Start service
+  shell: |
+    cd /docker/compose/fail2ban-exporter
+    docker compose up -d

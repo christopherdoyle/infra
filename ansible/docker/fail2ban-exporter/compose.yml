@@ -1,0 +1,18 @@
+services:
+  exporter:
+    container_name: fail2ban_exporter
+    image: vdcloudcraft/fail2ban-geo-exporter
+    restart: always
+    volumes:
+      - /etc/fail2ban:/etc/fail2ban:ro
+      - /var/lib/fail2ban/fail2ban.sqlite3:/var/lib/fail2ban/fail2ban.sqlite3:ro
+      - ./GeoLite2-City.mmdb:/f2b-exporter/db/GeoLite2-City.mmdb:ro
+      - ./conf.yml:/f2b-exporter/conf.yml:ro
+    networks:
+      - grafana_grafana_bridge
+
+  
+networks:
+  grafana_grafana_bridge:
+    external: true
+  

@@ -12,11 +12,14 @@
     - vars/dnfautomatic.yml
     - vars/nginx.yml
     - vars/firewall.yml
+    - vars/fail2ban.yml
 
   # roles:
-  #   - role: geerlingguy.nginx
+    # - role: robertdebock.fail2ban
+    # - role: geerlingguy.nginx
 
   tasks:
     # - import_tasks: tasks/root-qol.yml
     - import_tasks: tasks/docker-grafana.yml
+    - import_tasks: tasks/docker-fail2ban-exporter.yml
     # - import_tasks: tasks/start-nginx.yml

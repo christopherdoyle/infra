@@ -26,6 +26,8 @@ services:
     environment: *oncall-environment
     volumes:
       - /docker/volumes/grafana/oncall_data:/var/lib/oncall
+    networks:
+      - grafana_bridge
     depends_on:
       oncall_db_migration:
         condition: service_completed_successfully
@@ -42,6 +44,8 @@ services:
     environment: *oncall-environment
     volumes:
       - /docker/volumes/grafana/oncall_data:/var/lib/oncall
+    networks:
+      - grafana_bridge
     depends_on:
       oncall_db_migration:
         condition: service_completed_successfully
@@ -56,6 +60,8 @@ services:
     environment: *oncall-environment
     volumes:
       - /docker/volumes/grafana/oncall_data:/var/lib/oncall
+    networks:
+      - grafana_bridge
     depends_on:
       redis:
         condition: service_healthy
@@ -70,6 +76,8 @@ services:
       - 6379
     volumes:
       - /docker/volumes/grafana/redis_data:/data
+    networks:
+      - grafana_bridge
     deploy:
       resources:
         limits:
@@ -103,6 +111,8 @@ services:
           cpus: "0.5"
     volumes:
       - /docker/volumes/grafana/data:/var/lib/grafana
+    networks:
+      - grafana_bridge
     restart: always
     configs:
       - source: grafana.ini
@@ -115,6 +125,8 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - /docker/volumes/grafana/prometheus_data:/prometheus
+    networks:
+      - grafana_bridge
     restart: always
 
   node-exporter:
@@ -126,6 +138,8 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
+    networks:
+      - grafana_bridge
     command:
       - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
@@ -137,3 +151,7 @@ configs:
     content: |
       [feature_toggles]
       accessControlOnCall = false
+
+networks:
+  grafana_bridge:
+    driver: bridge

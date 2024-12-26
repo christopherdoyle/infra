@@ -4,6 +4,7 @@ roles:
   - name: geerlingguy.repo-epel
   - name: geerlingguy.nginx
   - name: geerlingguy.firewall
+  - name: robertdebock.fail2ban
 
 collections:
   - name: devsec.hardening
