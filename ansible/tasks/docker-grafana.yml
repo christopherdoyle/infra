@@ -25,12 +25,47 @@
     cd /docker/compose/grafana
     docker compose down
 
+- name: Create docker volume directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+    owner: grafana
+    group: grafana
+  loop:
+    - /docker/volumes/grafana/data
+    - /docker/volumes/grafana/oncall_data
+    - /docker/volumes/grafana/postgres_data
+    - /docker/volumes/grafana/redis_data
+
 - name: Set permissions for docker volumes
   ansible.builtin.command: chown -R grafana:grafana /docker/volumes/grafana
 
+- name: Read grafana user 
+  ansible.builtin.command: id -u grafana
+  register: grafana_user
+
+- name: Set grafana user variable
+  ansible.builtin.set_fact:
+    grafana_user: "{{ grafana_user.stdout }}"
+
+- name: Read grafana group
+  ansible.builtin.command: id -g grafana
+  register: grafana_group
+
+- name: Set grafana group variable
+  ansible.builtin.set_fact:
+    grafana_group: "{{ grafana_group.stdout }}"
+
+- name: Add user to docker .env file
+  ansible.builtin.lineinfile:
+    path: /docker/compose/grafana/.env
+    line: "DOCKER_USER={{ grafana_user }}:{{ grafana_group }}"
+    regexp: "^DOCKER_USER"
+    create: false
+
 - name: Start service
   ansible.builtin.shell: |
-    export DOCKER_USER="$(id -u grafana):$(id -g grafana)"
     cd /docker/compose/grafana
     docker compose up -d
 
@@ -38,7 +73,7 @@
   ansible.builtin.shell:
     cmd: |
       export $(cat /docker/compose/grafana/.env | xargs)
-      curl -X POST "http://$GRAFANA_ADMIN_USER:$GRAFANA_ADMIN_PASSWORD@127.0.0.1:8002/api/plugins/grafana-oncall-app/settings" -H "Content-Type: application/json" -d '{"enabled":true, "jsonData":{"stackId":5, "orgId":100, "onCallApiUrl":"http://engine:8080", "grafanaUrl":"http://grafana_grafana:3000"}}'
+      curl -X POST "http://$GRAFANA_ADMIN_USER:$GRAFANA_ADMIN_PASSWORD@127.0.0.1:8002/api/plugins/grafana-oncall-app/settings" -H "Content-Type: application/json" -d '{"enabled":true, "jsonData":{"stackId":5, "orgId":100, "onCallApiUrl":"http://engine:8080", "grafanaUrl":"http://grafana:3000"}}'
       curl -X POST "http://$GRAFANA_ADMIN_USER:$GRAFANA_ADMIN_PASSWORD@127.0.0.1:8002/api/plugins/grafana-oncall-app/resources/plugin/install"
   register: oncall_result
   failed_when: "'Invalid username or password' in oncall_result.stdout or '400 Bad Request' in oncall_result.stdout"

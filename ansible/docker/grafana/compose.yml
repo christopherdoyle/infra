@@ -5,7 +5,7 @@ x-environment: &oncall-environment
   SECRET_KEY: $SECRET_KEY
   FEATURE_PROMETHEUS_EXPORTER_ENABLED: ${FEATURE_PROMETHEUS_EXPORTER_ENABLED:-false}
   PROMETHEUS_EXPORTER_SECRET: ${PROMETHEUS_EXPORTER_SECRET:-}
-  REDIS_URI: redis://grafana_redis:6379/0
+  REDIS_URI: redis://redis:6379/0
   DJANGO_SETTINGS_MODULE: settings.hobby
   CELERY_WORKER_QUEUE: "default,critical,long,slack,telegram,webhook,retry,celery,grafana"
   CELERY_WORKER_CONCURRENCY: "1"
@@ -19,12 +19,10 @@ services:
     container_name: grafana_oncall_engine
     hostname: engine
     image: grafana/oncall
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     restart: always
     command: sh -c "uwsgi --ini uwsgi.ini"
     environment: *oncall-environment
-    ports:
-      - "8080:8080"
     volumes:
       - /docker/volumes/grafana/oncall_data:/var/lib/oncall
     depends_on:
@@ -35,8 +33,9 @@ services:
 
   celery:
     container_name: grafana_oncall_celery
+    hostname: celery
     image: grafana/oncall
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     restart: always
     command: sh -c "./celery_with_exporter.sh"
     environment: *oncall-environment
@@ -51,7 +50,7 @@ services:
   oncall_db_migration:
     container_name: grafana_oncall_db_migration
     image: grafana/oncall
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     command: python manage.py migrate --noinput
     environment: *oncall-environment
     volumes:
@@ -62,8 +61,9 @@ services:
 
   redis:
     container_name: grafana_redis
+    hostname: redis
     image: redis:7.0.15
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     restart: always
     expose:
       - 6379
@@ -82,8 +82,9 @@ services:
 
   grafana:
     container_name: grafana_grafana
+    hostname: grafana
     image: grafana/${GRAFANA_IMAGE:-grafana:latest}
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     ports:
       - "127.0.0.1:8002:3000"
     environment:
@@ -109,7 +110,7 @@ services:
   prometheus:
     container_name: grafana_prometheus
     image: prom/prometheus:latest
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - /docker/volumes/grafana/prometheus_data:/prometheus
@@ -118,7 +119,7 @@ services:
   node-exporter:
     container_name: grafana_node_exporter
     image: prom/node-exporter:latest
-    user: $DOCKER_USER
+    user: ${DOCKER_USER}
     restart: always
     volumes:
       - /proc:/host/proc:ro
