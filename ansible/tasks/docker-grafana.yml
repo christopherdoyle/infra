@@ -1,3 +1,10 @@
+- name: Create grafana user for docker
+  ansible.builtin.user:
+    name: grafana
+    state: present
+    shell: /bin/bash
+    create_home: false
+
 - name: Create grafana folders
   ansible.builtin.file:
     path: "{{ item }}"
@@ -18,7 +25,29 @@
     cd /docker/compose/grafana
     docker compose down
 
+- name: Set permissions for docker volumes
+  ansible.builtin.command: chown -R grafana:grafana /docker/volumes/grafana
+
 - name: Start service
-  shell: |
+  ansible.builtin.shell: |
+    export DOCKER_USER="$(id -u grafana):$(id -g grafana)"
     cd /docker/compose/grafana
     docker compose up -d
+
+- name: Set up grafana oncall
+  ansible.builtin.shell:
+    cmd: |
+      export $(cat /docker/compose/grafana/.env | xargs)
+      curl -X POST "http://$GRAFANA_ADMIN_USER:$GRAFANA_ADMIN_PASSWORD@127.0.0.1:8002/api/plugins/grafana-oncall-app/settings" -H "Content-Type: application/json" -d '{"enabled":true, "jsonData":{"stackId":5, "orgId":100, "onCallApiUrl":"http://engine:8080", "grafanaUrl":"http://grafana_grafana:3000"}}'
+      curl -X POST "http://$GRAFANA_ADMIN_USER:$GRAFANA_ADMIN_PASSWORD@127.0.0.1:8002/api/plugins/grafana-oncall-app/resources/plugin/install"
+  register: oncall_result
+  failed_when: "'Invalid username or password' in oncall_result.stdout or '400 Bad Request' in oncall_result.stdout"
+
+- name: Check grafana oncall status
+  ansible.builtin.shell:
+    cmd: |
+      export $(cat /docker/compose/grafana/.env | xargs)
+      curl -X GET "http://$GRAFANA_ADMIN_USER:$GRAFANA_ADMIN_PASSWORD@localhost:8002/api/plugins/grafana-oncall-app/resources/plugin/status"
+
+# curl -X POST 'http://admin:admin@localhost:3000/api/plugins/grafana-oncall-app/settings' -H "Content-Type: application/json" -d '{"enabled":true, "jsonData":{"stackId":5, "orgId":100, "onCallApiUrl":"http://engine:8080", "grafanaUrl":"http://grafana:3000"}}'
+# curl -X POST 'http://admin:admin@localhost:3000/api/plugins/grafana-oncall-app/resources/plugin/install'

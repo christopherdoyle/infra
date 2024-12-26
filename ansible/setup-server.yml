@@ -43,11 +43,10 @@
 
   tasks:
     - import_tasks: tasks/utils.yml
-    - import_tasks: tasks/install-btop.yml
+    - import_tasks: tasks/install-standard-apps.yml
     - import_tasks: tasks/prepare-docker.yml
     - import_tasks: tasks/docker-helloworld.yml
     - import_tasks: tasks/docker-uptime-kuma.yml
-    - import_tasks: tasks/docker-prometheus.yml
     - import_tasks: tasks/docker-grafana.yml
     - import_tasks: tasks/start-nginx.yml
     - import_tasks: tasks/dnf-automatic.yml

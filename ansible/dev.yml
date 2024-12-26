@@ -13,10 +13,10 @@
     - vars/nginx.yml
     - vars/firewall.yml
 
-  roles:
-    - role: geerlingguy.nginx
+  # roles:
+  #   - role: geerlingguy.nginx
 
   tasks:
     # - import_tasks: tasks/root-qol.yml
     - import_tasks: tasks/docker-grafana.yml
-    - import_tasks: tasks/start-nginx.yml
+    # - import_tasks: tasks/start-nginx.yml

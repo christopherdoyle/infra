@@ -1,0 +1,10 @@
+- name: Install standard apps
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - btop
+    - htop
+    - vim
+    - jq
+    
