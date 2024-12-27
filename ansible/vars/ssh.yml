@@ -1,0 +1,8 @@
+ssh_allow_users: ["ansible", "cdoyle"]
+ssh_permit_root_login: "no"
+ssh_x11_forwarding: false
+ssh_client_alive_interval: 300
+ssh_client_alive_count: 1
+ssh_banner: true
+ssh_banner_path: /etc/issue
+ssh_login_grace_time: 60s

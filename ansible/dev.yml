@@ -13,13 +13,18 @@
     - vars/nginx.yml
     - vars/firewall.yml
     - vars/fail2ban.yml
+    - vars/os-hardening.yml
 
-  # roles:
+  roles:
+    - role: cis_security
     # - role: robertdebock.fail2ban
     # - role: geerlingguy.nginx
+    # - role: devsec.hardening.ssh_hardening
+    # - role: devsec.hardening.os_hardening
 
   tasks:
+    - import_tasks: tasks/openscap.yml
     # - import_tasks: tasks/root-qol.yml
-    - import_tasks: tasks/docker-grafana.yml
-    - import_tasks: tasks/docker-fail2ban-exporter.yml
+    # - import_tasks: tasks/docker-grafana.yml
+    # - import_tasks: tasks/docker-fail2ban-exporter.yml
     # - import_tasks: tasks/start-nginx.yml

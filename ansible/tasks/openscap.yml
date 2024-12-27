@@ -1,0 +1,39 @@
+- name: Install OpenSCAP scanner
+  ansible.builtin.dnf:
+    name: openscap-scanner
+    state: present
+
+- name: Install OpenSCAP content
+  ansible.builtin.dnf:
+    name: scap-security-guide
+    state: present
+
+- name: Delete the previous scan results
+  ansible.builtin.file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  loop:
+    - results.xml
+    - scan_report.html
+    - remediation.yml
+
+- name: Perform a scan
+  ansible.builtin.command: oscap xccdf eval \
+      --profile xccdf_org.ssgproject.content_profile_cis \
+      --results /tmp/results.xml \
+      --report /tmp/scan_report.html \
+      /usr/share/xml/scap/ssg/content/ssg-almalinux9-ds.xml
+  ignore_errors: true
+
+- name: Generate a remediation playbook
+  ansible.builtin.command: oscap xccdf generate fix --fix-type ansible --output /tmp/remediation.yml --result-id "" /tmp/results.xml
+
+- name: Copy the reports to the local machine
+  ansible.builtin.fetch:
+    src: "/tmp/{{ item }}"
+    dest: "reports/{{ inventory_hostname }}/"
+    flat: true
+  loop:
+    - results.xml
+    - scan_report.html
+    - remediation.yml
