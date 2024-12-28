@@ -2,3 +2,7 @@ hosts
 galaxy/
 bootstrap/files/
 .env
+reports/
+files/*.priv
+files/*.pub
+files/icon/
