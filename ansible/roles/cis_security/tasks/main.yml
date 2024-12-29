@@ -1,3 +1,12 @@
+- name: Cron hardening
+  ansible.builtin.include_tasks: cron.yml
+
+- name: SSH hardening
+  ansible.builtin.include_tasks: ssh.yml
+
+- name: Sudo hardening
+  ansible.builtin.include_tasks: sudo.yml
+
 - name: Configure System Cryptography Policy
   ansible.builtin.lineinfile:
     path: /etc/crypto-policies/config
@@ -9,19 +18,6 @@
 - name: Verify that Crypto Policy is Set (runtime)
   ansible.builtin.command: /usr/bin/update-crypto-policies \
     --set {{ cis_security_system_crypto_policy }}
-
-- name: Ensure use_pty is enabled in /etc/sudoers
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    regexp: ^[\s]*Defaults.*\buse_pty\b.*$
-    line: Defaults use_pty
-    validate: /usr/sbin/visudo -cf %s
-
-- name: Enable logfile option with appropriate value in /etc/sudoers
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    line: Defaults logfile={{ cis_security_sudo_logfile }}
-    validate: /usr/sbin/visudo -cf %s
 
 - name: Modify the System Login Banner - Ensure Correct Banner
   ansible.builtin.copy:
@@ -43,35 +39,3 @@
     owner: root
     group: root
     mode: "0644"
-
-- name: Add empty /etc/cron.allow
-  ansible.builtin.file:
-    path: /etc/cron.allow
-    state: touch
-    owner: "0"
-    mode: "0600"
-
-- name: Remove /etc/cron.deny
-  ansible.builtin.file:
-    path: /etc/cron.deny
-    state: absent
-
-- name: Ensure SSHD uses strong KexAlgorithms
-  ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
-    create: false
-    regexp: (?i)^\s*KexAlgorithms\s+
-    line: KexAlgorithms {{ cis_security_sshd_strong_kex }}
-    state: present
-    insertbefore: BOF
-    validate: /usr/sbin/sshd -t -f %s
-
-- name: Ensure SSHD uses strong MACs
-  ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
-    create: false
-    regexp: (?i)^\s*MACs\s+
-    line: MACs {{ cis_security_sshd_strong_macs }}
-    state: present
-    insertbefore: BOF
-    validate: /usr/sbin/sshd -t -f %s

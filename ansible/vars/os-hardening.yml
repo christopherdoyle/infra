@@ -5,8 +5,7 @@ os_auth_pw_remember: 24
 os_auth_retry: 5
 os_auth_lockout_time: 900
 os_auth_timeout: 60
-os_auth_pam_passwdqc_enable: true
-os_auth_pam_pwquality_options: "minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 difok=2 maxrepeat=3 minclass=4 reject_username enforce_for_root dictcheck=1"
+os_auth_pam_passwdqc_enable: false
 
 sysctl_overwrite:
   # enable IPv4 traffic forwarding for docker

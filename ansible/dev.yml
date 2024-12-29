@@ -17,7 +17,8 @@
     - vars/os-hardening.yml
 
   roles:
-    - role: user_qol
+    - role: devsec.hardening.os_hardening
+    - role: cis_security
 
   tasks:
-    - import_tasks: tasks/install-standard-apps.yml
+    - import_tasks: tasks/openscap.yml

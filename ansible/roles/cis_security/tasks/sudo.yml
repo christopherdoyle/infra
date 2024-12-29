@@ -1,0 +1,12 @@
+- name: Ensure use_pty is enabled in /etc/sudoers
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: ^[\s]*Defaults.*\buse_pty\b.*$
+    line: Defaults use_pty
+    validate: /usr/sbin/visudo -cf %s
+
+- name: Enable logfile option with appropriate value in /etc/sudoers
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    line: Defaults logfile={{ cis_security_sudo_logfile }}
+    validate: /usr/sbin/visudo -cf %s

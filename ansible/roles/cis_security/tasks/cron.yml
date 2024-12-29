@@ -1,0 +1,11 @@
+- name: Add empty /etc/cron.allow
+  ansible.builtin.file:
+    path: /etc/cron.allow
+    state: touch
+    owner: "0"
+    mode: "0600"
+
+- name: Remove /etc/cron.deny
+  ansible.builtin.file:
+    path: /etc/cron.deny
+    state: absent
