@@ -1,4 +1,3 @@
-
 - name: Install dnf-automatic package
   ansible.builtin.package:
     name: dnf-automatic
@@ -13,4 +12,4 @@
 - name: Deploy service and timer units
   ansible.builtin.service:
     name: dnf-automatic.timer
-    enabled: yes
+    enabled: true

@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: "0700"
   loop:
     - /docker/compose/helloworld
     - /docker/volumes/helloworld
@@ -11,7 +11,7 @@
   ansible.builtin.copy:
     src: ./docker/helloworld/
     dest: /docker/compose/helloworld/
-    mode: 0644
+    mode: "0644"
 
 - name: Shutdown service
   ansible.builtin.shell: |
@@ -19,6 +19,6 @@
     docker compose down
 
 - name: Start service
-  shell: |
+  ansible.builtin.shell: |
     cd /docker/compose/helloworld
     docker compose up -d

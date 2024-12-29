@@ -9,7 +9,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: "0700"
   loop:
     - /docker/compose/grafana
     - /docker/volumes/grafana
@@ -18,13 +18,13 @@
   ansible.builtin.copy:
     src: ./docker/grafana/
     dest: /docker/compose/grafana/
-    mode: 0644
+    mode: "0644"
 
 - name: Create docker volume directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: "0700"
     owner: grafana
     group: grafana
   loop:

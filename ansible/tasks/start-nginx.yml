@@ -38,7 +38,7 @@
   ansible.builtin.service:
     name: nginx
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Allow nginx to listen to 8000
   community.general.seport:

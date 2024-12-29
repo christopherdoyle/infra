@@ -1,10 +1,10 @@
-
 - name: Configure System Cryptography Policy
   ansible.builtin.lineinfile:
     path: /etc/crypto-policies/config
     regexp: ^(?!#)(\S+)$
     line: '{{ cis_security_system_crypto_policy }}'
     create: true
+    mode: '0644'
 
 - name: Verify that Crypto Policy is Set (runtime)
   ansible.builtin.command: /usr/bin/update-crypto-policies \
@@ -27,6 +27,9 @@
   ansible.builtin.copy:
     dest: "{{ item }}"
     content: '{{ cis_security_login_banner_text }}'
+    owner: root
+    group: root
+    mode: '0644'
   loop:
     - /etc/issue
     - /etc/issue.net
@@ -37,6 +40,9 @@
     dest: /etc/modprobe.d/usb-storage.conf
     regexp: install\s+usb-storage
     line: install usb-storage /bin/false
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Add empty /etc/cron.allow
   ansible.builtin.file:

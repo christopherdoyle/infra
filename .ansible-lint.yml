@@ -1,0 +1,11 @@
+exclude_paths:
+  - .pre-commit-config.yaml
+  - ansible/galaxy/
+  - ansible/venv/
+  - ansible/docker/
+rulesdir:
+  - ./ansible/galaxy/
+skip_list:
+  - no-changed-when
+  - var-naming[pattern]
+  - yaml[line-length]

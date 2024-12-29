@@ -24,6 +24,7 @@
       --report /tmp/scan_report.html \
       /usr/share/xml/scap/ssg/content/ssg-almalinux9-ds.xml
   ignore_errors: true
+  failed_when: false
 
 - name: Generate a remediation playbook
   ansible.builtin.command: oscap xccdf generate fix --fix-type ansible --output /tmp/remediation.yml --result-id "" /tmp/results.xml
