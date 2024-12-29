@@ -1,21 +1,26 @@
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
-  hooks:
-   - id: check-added-large-files
-   - id: check-json
-   - id: check-merge-conflict
-   - id: check-symlinks
-   - id: check-yaml
-   - id: detect-private-key
-   - id: fix-byte-order-marker
-   - id: trailing-whitespace
-- repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.92.2
-  hooks:
-    - id: terraform_fmt
-- repo: https://github.com/ansible/ansible-lint
-  rev: v24.12.2
-  hooks:
-    - id: ansible-lint
-      files: ^ansible/.*\.(yaml|yml)$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      - id: detect-private-key
+      - id: fix-byte-order-marker
+      - id: trailing-whitespace
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.92.2
+    hooks:
+      - id: terraform_fmt
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v24.12.2
+    hooks:
+      - id: ansible-lint
+        files: ^ansible/.*\.(yaml|yml)$
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        files: \.(js|jsx|ts|tsx|css|less|scss|json|graphql|md|markdown|yaml|yml)$

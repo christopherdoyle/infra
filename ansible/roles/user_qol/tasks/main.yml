@@ -4,7 +4,7 @@
     dest: "/root/.bashrc"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: user_qol_root
 
 - name: Copy vimrc for root
@@ -13,7 +13,7 @@
     dest: "/root/.vimrc"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: user_qol_root
 
 - name: Copy bashrc for users
@@ -22,7 +22,7 @@
     dest: "/home/{{ item }}/.bashrc"
     owner: "{{ item }}"
     group: "{{ item }}"
-    mode: '0644'
+    mode: "0644"
   loop: "{{ user_qol_users }}"
 
 - name: Copy vimrc for users
@@ -31,5 +31,5 @@
     dest: "/home/{{ item }}/.vimrc"
     owner: "{{ item }}"
     group: "{{ item }}"
-    mode: '0644'
+    mode: "0644"
   loop: "{{ user_qol_users }}"

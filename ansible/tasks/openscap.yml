@@ -19,10 +19,10 @@
 
 - name: Perform a scan
   ansible.builtin.command: oscap xccdf eval \
-      --profile xccdf_org.ssgproject.content_profile_cis \
-      --results /tmp/results.xml \
-      --report /tmp/scan_report.html \
-      /usr/share/xml/scap/ssg/content/ssg-almalinux9-ds.xml
+    --profile xccdf_org.ssgproject.content_profile_cis \
+    --results /tmp/results.xml \
+    --report /tmp/scan_report.html \
+    /usr/share/xml/scap/ssg/content/ssg-almalinux9-ds.xml
   ignore_errors: true
   failed_when: false
 

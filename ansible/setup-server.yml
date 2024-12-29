@@ -28,7 +28,7 @@
     - role: devsec.hardening.nginx_hardening
       vars:
         # small changes from hardening default for more compatability with shit
-        nginx_add_header:  # changes: I removed CSP because it broke uptime-kuma
+        nginx_add_header: # changes: I removed CSP because it broke uptime-kuma
           # avoid clickjacking
           - X-Frame-Options SAMEORIGIN
           # disable content-type sniffing

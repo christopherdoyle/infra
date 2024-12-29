@@ -46,8 +46,7 @@
     # work-around cPanel's open file limit of 100.  Mitogen uses file
     # descriptors 100 and 101 for internal purposes.  See:
     # https://github.com/dw/mitogen/issues/644
-    groups:
-      "{{ 'wheel' if ansible_facts['os_family'] == 'RedHat' else '' }}"
+    groups: "{{ 'wheel' if ansible_facts['os_family'] == 'RedHat' else '' }}"
     home: "/home/ansible"
 
 - name: Create Ansible's authorized_keys

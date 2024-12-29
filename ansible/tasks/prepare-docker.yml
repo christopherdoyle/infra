@@ -3,7 +3,7 @@
     path: "{{ item }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
     state: directory
   loop:
     - /docker

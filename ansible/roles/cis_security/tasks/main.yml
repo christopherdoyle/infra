@@ -2,9 +2,9 @@
   ansible.builtin.lineinfile:
     path: /etc/crypto-policies/config
     regexp: ^(?!#)(\S+)$
-    line: '{{ cis_security_system_crypto_policy }}'
+    line: "{{ cis_security_system_crypto_policy }}"
     create: true
-    mode: '0644'
+    mode: "0644"
 
 - name: Verify that Crypto Policy is Set (runtime)
   ansible.builtin.command: /usr/bin/update-crypto-policies \
@@ -26,10 +26,10 @@
 - name: Modify the System Login Banner - Ensure Correct Banner
   ansible.builtin.copy:
     dest: "{{ item }}"
-    content: '{{ cis_security_login_banner_text }}'
+    content: "{{ cis_security_login_banner_text }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   loop:
     - /etc/issue
     - /etc/issue.net
@@ -42,14 +42,14 @@
     line: install usb-storage /bin/false
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Add empty /etc/cron.allow
   ansible.builtin.file:
     path: /etc/cron.allow
     state: touch
-    owner: '0'
-    mode: '0600'
+    owner: "0"
+    mode: "0600"
 
 - name: Remove /etc/cron.deny
   ansible.builtin.file:
