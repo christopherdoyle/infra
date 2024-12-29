@@ -1,7 +1,13 @@
+- name: Aide hardening
+  ansible.builtin.include_tasks: aide.yml
+
 - name: Cron hardening
   ansible.builtin.include_tasks: cron.yml
 
-- name: SSH hardening
+- name: Passwords hardening
+  ansible.builtin.include_tasks: passwords.yml
+
+- name: Ssh hardening
   ansible.builtin.include_tasks: ssh.yml
 
 - name: Sudo hardening

@@ -1,0 +1,53 @@
+- name: Ensure aide is installed
+  ansible.builtin.package:
+    name: aide
+    state: present
+
+- name: Build and Test AIDE Database - Build and Test AIDE Database
+  ansible.builtin.command: /usr/sbin/aide --init
+  changed_when: true
+
+- name: Build and Test AIDE Database - Check Whether the Stock AIDE Database Exists
+  ansible.builtin.stat:
+    path: /var/lib/aide/aide.db.new.gz
+  register: aide_database_stat
+
+- name: Build and Test AIDE Database - Stage AIDE Database
+  ansible.builtin.copy:
+    src: /var/lib/aide/aide.db.new.gz
+    dest: /var/lib/aide/aide.db.gz
+    backup: true
+    remote_src: true
+  when:
+    - (aide_database_stat.stat.exists is defined and aide_database_stat.stat.exists)
+
+- name: Gather List of Packages
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Set audit_tools fact
+  ansible.builtin.set_fact:
+    audit_tools:
+      - /usr/sbin/auditctl
+      - /usr/sbin/auditd
+      - /usr/sbin/augenrules
+      - /usr/sbin/aureport
+      - /usr/sbin/ausearch
+      - /usr/sbin/autrace
+      - /usr/sbin/rsyslogd
+
+- name: Ensure AIDE configuration for audit tools is correct
+  ansible.builtin.lineinfile:
+    path: /etc/aide.conf
+    regexp: ^{{ item }}\s
+    line: "{{ item }} p+i+n+u+g+s+b+acl+selinux+xattrs+sha512"
+  with_items: "{{ audit_tools }}"
+
+- name: Configure Periodic Execution of AIDE
+  ansible.builtin.cron:
+    name: run AIDE check
+    minute: 5
+    hour: 4
+    weekday: 0
+    user: root
+    job: /usr/sbin/aide --check
