@@ -11,8 +11,7 @@ services:
     networks:
       - grafana_grafana_bridge
 
-  
+
 networks:
   grafana_grafana_bridge:
     external: true
-  

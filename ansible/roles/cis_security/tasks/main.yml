@@ -30,7 +30,7 @@
   loop:
     - /etc/issue
     - /etc/issue.net
-  
+
 - name: Ensure kernel module 'usb-storage' is disabled
   ansible.builtin.lineinfile:
     create: true

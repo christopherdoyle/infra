@@ -36,7 +36,7 @@
 - name: Set permissions for docker volumes
   ansible.builtin.command: chown -R grafana:grafana /docker/volumes/grafana
 
-- name: Read grafana user 
+- name: Read grafana user
   ansible.builtin.command: id -u grafana
   register: grafana_user
 
