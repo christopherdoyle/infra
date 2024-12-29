@@ -7,4 +7,8 @@
     - htop
     - vim
     - jq
+    - bzip2
+    - zip
+    - unzip
+    - tmux
     

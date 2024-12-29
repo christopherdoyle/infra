@@ -48,6 +48,7 @@
     - import_tasks: tasks/docker-helloworld.yml
     - import_tasks: tasks/docker-uptime-kuma.yml
     - import_tasks: tasks/docker-grafana.yml
+    - import_tasks: tasks/docker-ente.yml
     - import_tasks: tasks/start-nginx.yml
     - import_tasks: tasks/dnf-automatic.yml
     - import_tasks: tasks/openscap.yml
