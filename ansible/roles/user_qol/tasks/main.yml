@@ -1,0 +1,35 @@
+- name: Copy bashrc for root
+  ansible.builtin.copy:
+    src: files/bashrc
+    dest: "/root/.bashrc"
+    owner: root
+    group: root
+    mode: '0644'
+  when: user_qol_root
+
+- name: Copy vimrc for root
+  ansible.builtin.copy:
+    src: files/vimrc
+    dest: "/root/.vimrc"
+    owner: root
+    group: root
+    mode: '0644'
+  when: user_qol_root
+
+- name: Copy bashrc for users
+  ansible.builtin.copy:
+    src: files/bashrc
+    dest: "/home/{{ item }}/.bashrc"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0644'
+  loop: "{{ user_qol_users }}"
+
+- name: Copy vimrc for users
+  ansible.builtin.copy:
+    src: files/vimrc
+    dest: "/home/{{ item }}/.vimrc"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0644'
+  loop: "{{ user_qol_users }}"

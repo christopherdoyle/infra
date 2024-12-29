@@ -17,9 +17,7 @@
     - vars/os-hardening.yml
 
   roles:
-    - role: geerlingguy.nginx
+    - role: user_qol
 
   tasks:
     - import_tasks: tasks/install-standard-apps.yml
-    - import_tasks: tasks/docker-ente.yml
-    - import_tasks: tasks/start-nginx.yml

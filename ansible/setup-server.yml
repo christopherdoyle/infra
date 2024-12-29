@@ -17,6 +17,7 @@
     - vars/os-hardening.yml
 
   roles:
+    - role: user_qol
     - role: geerlingguy.firewall
     - role: geerlingguy.git
     - role: geerlingguy.docker
