@@ -2,7 +2,7 @@
 
 - name: Create SSL directory
   ansible.builtin.file:
-    path: /etc/ssl/***REMOVED***.com/
+    path: /etc/ssl/{{ hostname }}/
     owner: root
     group: root
     mode: '0600'
@@ -10,14 +10,14 @@
 
 - name: Copy SSL key
   ansible.builtin.copy:
-    src: ./files/***REMOVED***.com.priv
-    dest: /etc/ssl/***REMOVED***.com/
+    src: ./files/{{ hostname }}.priv
+    dest: /etc/ssl/{{ hostname }}/
     mode: '0600'
 
 - name: Copy SSL cert
   ansible.builtin.copy:
-    src: ./files/***REMOVED***.com.pub
-    dest: /etc/ssl/***REMOVED***.com/
+    src: ./files/{{ hostname }}.pub
+    dest: /etc/ssl/{{ hostname }}/
     mode: '0600'
 
 - name: Create /var/www/default directory
