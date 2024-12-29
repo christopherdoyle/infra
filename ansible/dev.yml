@@ -14,11 +14,13 @@
     - vars/nginx.yml
     - vars/firewall.yml
     - vars/fail2ban.yml
+    - vars/ssh-hardening.yml
     - vars/os-hardening.yml
 
   roles:
     - role: devsec.hardening.os_hardening
-    - role: cis_security
+    - role: devsec.hardening.ssh_hardening
+    - role: cis_hardening
 
   tasks:
     - import_tasks: tasks/openscap.yml

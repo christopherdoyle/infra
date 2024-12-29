@@ -14,6 +14,7 @@
     - vars/nginx.yml
     - vars/firewall.yml
     - vars/fail2ban.yml
+    - vars/ssh-hardening.yml
     - vars/os-hardening.yml
 
   roles:
@@ -41,7 +42,7 @@
         # slightly higher (5 to 10) connection limit
         nginx_limit_conn: default 10
     - role: robertdebock.fail2ban
-    - role: cis_security
+    - role: cis_hardening
 
   tasks:
     - import_tasks: tasks/utils.yml
