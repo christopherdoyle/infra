@@ -1,0 +1,69 @@
+- name: Ensure the Default Bash Unmask is 027
+  ansible.builtin.lineinfile:
+    path: /etc/bashrc
+    regex: "^[^#].*umask 027"
+    line: "umask 027"
+
+- name: Ensure the Default Umask is Set Correctly in /etc/profile - Locate Profile Configuration Files Where umask Is Defined
+  ansible.builtin.find:
+    paths:
+      - /etc/profile.d
+    patterns:
+      - sh.local
+      - "*.sh"
+    contains: ^[\s]*umask\s+\d+
+  register: result_profile_d_files
+
+- name:
+    Ensure the Default Umask is Set Correctly in /etc/profile - Replace Existing
+    umask Value in Files From /etc/profile.d
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: ^(\s*)umask\s+\d+
+    replace: \1umask 027
+  loop: "{{ result_profile_d_files.files }}"
+  register: result_umask_replaced_profile_d
+  when: result_profile_d_files.matched
+
+- name:
+    Ensure the Default Umask is Set Correctly in /etc/profile - Ensure umask Is
+    Set in /etc/profile if Not Already Set Elsewhere
+  ansible.builtin.lineinfile:
+    create: true
+    mode: 420
+    path: /etc/profile
+    line: umask 027
+  when: not result_profile_d_files.matched
+
+- name:
+    Ensure the Default Umask is Set Correctly in /etc/profile - Ensure umask Value
+    For All Existing umask Definition in /etc/profile
+  ansible.builtin.replace:
+    path: /etc/profile
+    regexp: ^(\s*)umask\s+\d+
+    replace: \1umask 027
+  register: result_umask_replaced_profile
+
+- name: Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Gather User Info
+  ansible.builtin.getent:
+    database: passwd
+  register: getent_passwd
+
+- name: Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Find Init Files
+  ansible.builtin.find:
+    paths: "{{ item.value[4] }}"
+    pattern: '^\.[\w\- ]+$'
+    hidden: true
+    use_regex: true
+  with_dict: "{{ ansible_facts.getent_passwd }}"
+  when:
+    - item.value[4] != "/sbin/nologin"
+    - item.key not in ["nobody", "nfsnobody"]
+    - item.value[1] | int >= 1000
+  register: found_init_files
+
+- name: Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Fix Init Files Permissions
+  ansible.builtin.file:
+    path: "{{ item.1.path }}"
+    mode: u-s,g-wxs,o=
+  loop: "{{ q('ansible.builtin.subelements', found_init_files.results, 'files', {'skip_missing': True}) }}"

@@ -4,6 +4,9 @@
 - name: Cron hardening
   ansible.builtin.include_tasks: cron.yml
 
+- name: Fs hardening
+  ansible.builtin.include_tasks: filesystem.yml
+
 - name: Passwords hardening
   ansible.builtin.include_tasks: passwords.yml
 
