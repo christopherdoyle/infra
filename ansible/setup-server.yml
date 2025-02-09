@@ -24,6 +24,8 @@
     - role: geerlingguy.docker
     - role: geerlingguy.repo-epel
     - role: geerlingguy.nginx
+      tags:
+        - nginx
     - role: devsec.hardening.os_hardening
     - role: devsec.hardening.ssh_hardening
     - role: devsec.hardening.nginx_hardening
@@ -52,6 +54,10 @@
     - import_tasks: tasks/docker-uptime-kuma.yml
     - import_tasks: tasks/docker-grafana.yml
     - import_tasks: tasks/docker-ente.yml
+    - import_tasks: tasks/docker-nextcloud-aio.yml
+      tags:
+        - docker
+        - nextcloud
     - import_tasks: tasks/start-nginx.yml
     - import_tasks: tasks/dnf-automatic.yml
     - import_tasks: tasks/openscap.yml

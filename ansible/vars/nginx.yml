@@ -1,20 +1,30 @@
 nginx_proxy_cache_path: "/var/cache/nginx keys_zone=cache:32m"
 nginx_vhosts:
-  - server_name: "dev.{{ hostname }}.com"
+  - server_name: "dev.{{ hostname }}"
     state: "present"
     template: "proxy.j2"
     proxy_port: 8000
-  - server_name: "uptime.{{ hostname }}.com"
+  - server_name: "uptime.{{ hostname }}"
     state: "present"
     template: "proxy.j2"
     proxy_port: 8001
-  - server_name: "grafana.{{ hostname }}.com"
+  - server_name: "grafana.{{ hostname }}"
     state: "present"
     template: "proxy.j2"
     proxy_port: 8002
-  - server_name: "ente.{{ hostname }}.com"
+  - server_name: "ente.{{ hostname }}"
     state: "present"
     template: "proxy.j2"
     proxy_port: 8003
-nginx_service_state: stopped
-nginx_service_enabled: false
+  - server_name: "nextcloud.{{ hostname }}"
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 8004
+  - server_name: "ncadmin.{{ hostname }}"
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 8005
+    proxy_protocol: https
+    trust_proxy_ssl: true
+nginx_service_state: started
+nginx_service_enabled: true

@@ -1,0 +1,24 @@
+- name: Create nextcloud-aio folders
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - /docker/compose/nextcloud-aio
+    - /docker/volumes/nextcloud-aio
+
+- name: Copy nextcloud-aio folder
+  ansible.builtin.copy:
+    src: ./docker/nextcloud-aio/
+    dest: /docker/compose/nextcloud-aio/
+    mode: "0644"
+
+- name: Shutdown service
+  ansible.builtin.shell: |
+    cd /docker/compose/nextcloud-aio
+    docker compose down
+
+- name: Start service
+  ansible.builtin.shell: |
+    cd /docker/compose/nextcloud-aio
+    docker compose up -d

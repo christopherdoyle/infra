@@ -1,0 +1,28 @@
+services:
+  nextcloud-aio-mastercontainer:
+    restart: always
+    container_name: nextcloud-aio-mastercontainer
+    image: nextcloud/all-in-one:latest
+    init: true
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      #  - 80:80
+      - 8005:8080
+    #  - 8443:8443
+    environment: # Is needed when using any of the options below
+      APACHE_PORT: 8004
+      APACHE_IP_BINDING: 0.0.0.0
+      # BORG_RETENTION_POLICY: --keep-within=7d --keep-weekly=4 --keep-monthly=6 # Allows to adjust borgs retention policy. See https://github.com/nextcloud/all-in-one#how-to-adjust-borgs-retention-policy
+      NEXTCLOUD_DATADIR: /docker/volumes/nextcloud-aio/ncdata
+    security_opt: ["label:disable"] # Is needed when using SELinux
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer
+    driver: local
+    driver_opts:
+      type: none
+      device: /docker/volumes/nextcloud-aio/nextcloud_aio_mastercontainer
+      o: bind
