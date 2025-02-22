@@ -1,5 +1,17 @@
 - ansible.builtin.include_role:
     name: robertdebock.fail2ban
+  vars:
+    fail2ban_loglevel: INFO
+    fail2ban_logtarget: /var/log/fail2ban.log
+    fail2ban_ignoreself: "true"
+    fail2ban_ignoreips:
+      - "127.0.0.1/8 ::1"
+    # in seconds: 24 hour ban
+    fail2ban_bantime: 86400
+    fail2ban_findtime: 86400
+    fail2ban_maxretry: 5
+    fail2ban_destemail: root@localhost
+    fail2ban_sender: root@{{ ansible_fqdn }}
 
 - name: Configure jail sshd
   ansible.builtin.template:
