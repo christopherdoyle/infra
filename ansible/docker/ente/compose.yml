@@ -16,6 +16,8 @@ services:
       - ./museum.yaml:/museum.yaml:ro
       - ./scripts/compose/credentials.yaml:/credentials.yaml:ro
     restart: always
+    networks:
+      - internal
 
   postgres:
     container_name: ente_postgres
@@ -32,3 +34,65 @@ services:
     volumes:
       - /docker/volumes/ente/postgres:/var/lib/postgresql/data
     restart: always
+    networks:
+      - internal
+
+  # Resolve "localhost:3200" in the museum container to the minio container.
+  socat:
+    container_name: ente_socat
+    image: alpine/socat
+    network_mode: service:museum
+    restart: always
+    depends_on:
+      - museum
+    command: "TCP-LISTEN:3200,fork,reuseaddr TCP:minio:3200"
+
+  minio:
+    container_name: ente_minio
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: test
+      MINIO_ROOT_PASSWORD: testtest
+    command: server /data --address ":3200" --console-address ":3201"
+    volumes:
+      - /docker/volumes/ente/minio-data:/data
+    networks:
+      - internal
+    restart: always
+
+  minio-provision:
+    container_name: name_minio_provision
+    image: minio/mc
+    depends_on:
+      - minio
+    volumes:
+      - ./scripts/compose/minio-provision.sh:/provision.sh:ro
+      - /docker/volumes/ente/minio-data:/data
+    networks:
+      - internal
+    entrypoint: sh /provision.sh
+
+  ente-cli:
+    container_name: ente_cli
+    # NOTE: this is built from the github repository which is cloned by ansible
+    build:
+      context: ./gitrepo/cli/
+      tags:
+        - ente-cli:latest
+    command: /bin/sh
+    volumes:
+      - ./cli_config.yaml:/config.yaml:ro
+      # This is mandatory to mount the local directory to the container at /cli-data
+      # CLI will use this directory to store the data required for syncing export
+      - /docker/volumes/ente/cli:/cli-data:rw
+      # You can add additional volumes to mount the export directory to the container
+      # While adding account for export, you can use /data as the export directory.
+      - /docker/volumes/ente/export:/data:rw
+    stdin_open: true
+    tty: true
+    networks:
+      - internal
+    restart: no
+
+networks:
+  internal:

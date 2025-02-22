@@ -13,6 +13,15 @@
     dest: /docker/compose/ente/
     mode: "0644"
 
+- name: Clone ente repository
+  ansible.builtin.git:
+    repo: https://github.com/ente-io/ente/
+    dest: /docker/compose/ente/gitrepo
+    clone: yes
+    update: false
+    depth: 1
+    version: cli-v0.2.3
+
 - name: Shutdown service
   ansible.builtin.shell: |
     cd /docker/compose/ente

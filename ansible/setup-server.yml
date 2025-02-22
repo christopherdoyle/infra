@@ -54,6 +54,9 @@
     - import_tasks: tasks/docker-uptime-kuma.yml
     - import_tasks: tasks/docker-grafana.yml
     - import_tasks: tasks/docker-ente.yml
+      tags:
+        - docker
+        - ente
     - import_tasks: tasks/docker-nextcloud-aio.yml
       tags:
         - docker

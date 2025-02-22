@@ -1,0 +1,2 @@
+endpoint:
+  api: "http://museum:8080"
