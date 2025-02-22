@@ -1,2 +1,29 @@
 - ansible.builtin.include_role:
     name: robertdebock.fail2ban
+
+- name: Configure jail sshd
+  ansible.builtin.template:
+    src: jail_sshd.conf.j2
+    dest: /etc/fail2ban/jail.d/sshd.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart fail2ban
+
+- name: Configure jail nginx auth
+  ansible.builtin.template:
+    src: jail_nginxauth.conf.j2
+    dest: /etc/fail2ban/jail.d/nginx-auth.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart fail2ban
+
+- name: Configure jail nginx badbots
+  ansible.builtin.template:
+    src: jail_nginxbadbots.conf.j2
+    dest: /etc/fail2ban/jail.d/nginx-badbots.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart fail2ban
