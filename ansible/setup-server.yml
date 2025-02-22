@@ -61,6 +61,10 @@
       tags:
         - docker
         - nextcloud
+    - import_tasks: tasks/docker-diun.yml
+      tags:
+        - docker
+        - diun
     - import_tasks: tasks/start-nginx.yml
     - import_tasks: tasks/dnf-automatic.yml
     - import_tasks: tasks/openscap.yml
