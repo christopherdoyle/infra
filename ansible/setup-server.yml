@@ -27,8 +27,14 @@
       tags:
         - nginx
     - role: devsec.hardening.os_hardening
+      tags:
+        - hardening
     - role: devsec.hardening.ssh_hardening
+      tags:
+        - hardening
     - role: devsec.hardening.nginx_hardening
+      tags:
+        - hardening
       vars:
         # small changes from hardening default for more compatability with shit
         nginx_add_header: # changes: I removed CSP because it broke uptime-kuma
@@ -43,8 +49,13 @@
         nginx_large_client_header_buffers: "4 2k"
         # slightly higher (5 to 10) connection limit
         nginx_limit_conn: default 10
-    - role: robertdebock.fail2ban
+    - role: fail2ban
+      tags:
+        - fail2ban
+        - hardening
     - role: cis_hardening
+      tags:
+        - hardening
 
   tasks:
     - import_tasks: tasks/utils.yml
