@@ -52,7 +52,13 @@
     - import_tasks: tasks/prepare-docker.yml
     - import_tasks: tasks/docker-helloworld.yml
     - import_tasks: tasks/docker-uptime-kuma.yml
+      tags:
+        - docker
+        - uptimekuma
     - import_tasks: tasks/docker-grafana.yml
+      tags:
+        - docker
+        - grafana
     - import_tasks: tasks/docker-ente.yml
       tags:
         - docker
