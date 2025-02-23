@@ -7,65 +7,9 @@ x-environment: &oncall-environment
   PROMETHEUS_EXPORTER_SECRET: ${PROMETHEUS_EXPORTER_SECRET:-}
   REDIS_URI: redis://redis:6379/0
   DJANGO_SETTINGS_MODULE: settings.hobby
-  CELERY_WORKER_QUEUE: "default,critical,long,slack,telegram,webhook,retry,celery,grafana"
-  CELERY_WORKER_CONCURRENCY: "1"
-  CELERY_WORKER_MAX_TASKS_PER_CHILD: "100"
-  CELERY_WORKER_SHUTDOWN_INTERVAL: "65m"
-  CELERY_WORKER_BEAT_ENABLED: "True"
   GRAFANA_API_URL: http://grafana:3000
-  GRAFANA_CLOUD_ONCALL_API_URL: https://oncall-prod-eu-west-0.grafana.net/oncall
 
 services:
-  engine:
-    container_name: grafana_oncall_engine
-    hostname: engine
-    image: grafana/oncall:v1.15.0
-    user: ${DOCKER_USER}
-    restart: always
-    command: sh -c "uwsgi --ini uwsgi.ini"
-    environment: *oncall-environment
-    volumes:
-      - /docker/volumes/grafana/oncall_data:/var/lib/oncall
-    networks:
-      - grafana_bridge
-    depends_on:
-      oncall_db_migration:
-        condition: service_completed_successfully
-      redis:
-        condition: service_healthy
-
-  celery:
-    container_name: grafana_oncall_celery
-    hostname: celery
-    image: grafana/oncall:v1.15.0
-    user: ${DOCKER_USER}
-    restart: always
-    command: sh -c "./celery_with_exporter.sh"
-    environment: *oncall-environment
-    volumes:
-      - /docker/volumes/grafana/oncall_data:/var/lib/oncall
-    networks:
-      - grafana_bridge
-    depends_on:
-      oncall_db_migration:
-        condition: service_completed_successfully
-      redis:
-        condition: service_healthy
-
-  oncall_db_migration:
-    container_name: grafana_oncall_db_migration
-    image: grafana/oncall:v1.15.0
-    user: ${DOCKER_USER}
-    command: python manage.py migrate --noinput
-    environment: *oncall-environment
-    volumes:
-      - /docker/volumes/grafana/oncall_data:/var/lib/oncall
-    networks:
-      - grafana_bridge
-    depends_on:
-      redis:
-        condition: service_healthy
-
   redis:
     container_name: grafana_redis
     hostname: redis
