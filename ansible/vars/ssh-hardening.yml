@@ -5,4 +5,4 @@ ssh_client_alive_interval: 300
 ssh_client_alive_count: 1
 ssh_banner: true
 ssh_banner_path: /etc/issue.net
-ssh_login_grace_time: 60s
+ssh_login_grace_time: 60

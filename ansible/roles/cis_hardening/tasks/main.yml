@@ -1,6 +1,9 @@
 - name: Aide hardening
   ansible.builtin.include_tasks: aide.yml
 
+- name: Chrony hardening
+  ansible.builtin.include_tasks: chrony.yml
+
 - name: Cron hardening
   ansible.builtin.include_tasks: cron.yml
 
@@ -15,6 +18,9 @@
 
 - name: Sudo hardening
   ansible.builtin.include_tasks: sudo.yml
+
+- name: Timeouts
+  ansible.builtin.include_tasks: timeouts.yml
 
 - name: Configure System Cryptography Policy
   ansible.builtin.lineinfile:
@@ -48,3 +54,12 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Set 'ProcessSizeMax' to '0' in the [Coredump] section of '/etc/systemd/coredump.conf'
+  ansible.builtin.ini_file:
+    path: /etc/systemd/coredump.conf
+    section: Coredump
+    option: ProcessSizeMax
+    value: "0"
+    create: true
+    mode: 420

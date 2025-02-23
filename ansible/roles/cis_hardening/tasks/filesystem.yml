@@ -1,48 +1,29 @@
-- name: Ensure the Default Bash Unmask is 027
+- name: Check if umask in /etc/bashrc is already set
   ansible.builtin.lineinfile:
     path: /etc/bashrc
-    regex: "^[^#].*umask 027"
-    line: "umask 027"
+    regexp: ^[^#]*\bumask\s+\d+$
+    state: absent
+  check_mode: true
+  changed_when: false
+  register: umask_replace
 
-- name: Ensure the Default Umask is Set Correctly in /etc/profile - Locate Profile Configuration Files Where umask Is Defined
-  ansible.builtin.find:
-    paths:
-      - /etc/profile.d
-    patterns:
-      - sh.local
-      - "*.sh"
-    contains: ^[\s]*umask\s+\d+
-  register: result_profile_d_files
-
-- name:
-    Ensure the Default Umask is Set Correctly in /etc/profile - Replace Existing
-    umask Value in Files From /etc/profile.d
+- name: Replace user umask in /etc/bashrc
   ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: ^(\s*)umask\s+\d+
-    replace: \1umask 027
-  loop: "{{ result_profile_d_files.files }}"
-  register: result_umask_replaced_profile_d
-  when: result_profile_d_files.matched
+    path: /etc/bashrc
+    regexp: ^([^#]*\b)umask\s+\d+$
+    replace: \g<1>umask 027
+  when:
+    - '"bash" in ansible_facts.packages'
+    - umask_replace.found > 0
 
-- name:
-    Ensure the Default Umask is Set Correctly in /etc/profile - Ensure umask Is
-    Set in /etc/profile if Not Already Set Elsewhere
+- name: Ensure the Default umask is Appended Correctly
   ansible.builtin.lineinfile:
     create: true
-    mode: 420
-    path: /etc/profile
+    path: /etc/bashrc
     line: umask 027
-  when: not result_profile_d_files.matched
-
-- name:
-    Ensure the Default Umask is Set Correctly in /etc/profile - Ensure umask Value
-    For All Existing umask Definition in /etc/profile
-  ansible.builtin.replace:
-    path: /etc/profile
-    regexp: ^(\s*)umask\s+\d+
-    replace: \1umask 027
-  register: result_umask_replaced_profile
+  when:
+    - '"bash" in ansible_facts.packages'
+    - umask_replace.found == 0
 
 - name: Ensure All User Initialization Files Have Mode 0740 Or Less Permissive - Gather User Info
   ansible.builtin.getent:
@@ -67,3 +48,15 @@
     path: "{{ item.1.path }}"
     mode: u-s,g-wxs,o=
   loop: "{{ q('ansible.builtin.subelements', found_init_files.results, 'files', {'skip_missing': True}) }}"
+
+- name: Test for existence /boot/grub2/grub.cfg
+  ansible.builtin.stat:
+    path: /boot/grub2/grub.cfg
+  register: grub2_cfg_exists
+
+- name: Ensure permission u-xs,g-xwrs,o-xwrt on /boot/grub2/grub.cfg
+  ansible.builtin.file:
+    path: /boot/grub2/grub.cfg
+    mode: u-xs,g-xwrs,o-xwrt
+  when:
+    - grub2_cfg_exists.stat is defined and grub2_cfg_exists.stat.exists

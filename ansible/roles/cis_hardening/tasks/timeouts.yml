@@ -1,0 +1,19 @@
+- name: Set account expiration following inactivity
+  ansible.builtin.lineinfile:
+    dest: /etc/default/useradd
+    regexp: ^INACTIVE
+    line: INACTIVE=45
+
+- name: Correct any occurrence of TMOUT in /etc/profile
+  ansible.builtin.replace:
+    path: /etc/profile
+    regexp: ^[^#].*TMOUT=.*
+    replace: typeset -xr TMOUT=900
+
+- name: Set Interactive Session Timeout
+  lineinfile:
+    path: /etc/profile.d/tmout.sh
+    create: true
+    regexp: TMOUT=
+    line: typeset -xr TMOUT=900
+    state: present

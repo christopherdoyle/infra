@@ -55,6 +55,7 @@
         - hardening
     - role: cis_hardening
       tags:
+        - cis-hardening
         - hardening
 
   tasks:
