@@ -18,12 +18,30 @@
     - remediation.yml
 
 - name: Perform a scan
-  ansible.builtin.command: oscap xccdf eval \
+  # oscap scan configured for weak systems:
+  #   taskset -c 0 is used to limit the scan to a single core
+  #   --skip-rule is used to skip rules that are slow (scan entire filesystem) and use much memory
+  #   OSCAP_PROBE_MEMORY_USAGE_RATIO is increased from the default value of 0.1
+  ansible.builtin.command: taskset -c 0 \
+    oscap xccdf eval \
     --profile xccdf_org.ssgproject.content_profile_cis \
     --results /tmp/results.xml \
     --report /tmp/scan_report.html \
+    --fetch-remote-resources \
+    --skip-rule xccdf_org.ssgproject.content_rule_accounts_user_dot_no_world_writable_programs \
+    --skip-rule xccdf_org.ssgproject.content_rule_dir_perms_world_writable_sticky_bits \
+    --skip-rule xccdf_org.ssgproject.content_rule_dir_perms_world_writable_system_owned \
+    --skip-rule xccdf_org.ssgproject.content_rule_file_permissions_unauthorized_world_writable \
+    --skip-rule xccdf_org.ssgproject.content_rule_file_permissions_unauthorized_suid \
+    --skip-rule xccdf_org.ssgproject.content_rule_file_permissions_unauthorized_sgid \
+    --skip-rule xccdf_org.ssgproject.content_rule_file_permissions_ungroupowned \
+    --skip-rule xccdf_org.ssgproject.content_rule_no_files_unowned_by_user \
     /usr/share/xml/scap/ssg/content/ssg-almalinux9-ds.xml
-  ignore_errors: true
+  environment:
+    OSCAP_PROBE_MEMORY_USAGE_RATIO: 0.25
+  # oscap "fails" all the time, so we need to ignore the errors
+  # if it does fail fail, then the next task will fail because the output files won't exist
+  ignore_errors: false
   failed_when: false
 
 - name: Generate a remediation playbook
