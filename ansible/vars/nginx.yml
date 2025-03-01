@@ -26,5 +26,9 @@ nginx_vhosts:
     proxy_port: 8005
     proxy_protocol: https
     trust_proxy_ssl: true
+  - server_name: "overleaf.{{ hostname }}"
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 8006
 nginx_service_state: started
 nginx_service_enabled: true

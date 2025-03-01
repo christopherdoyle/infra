@@ -1,0 +1,63 @@
+services:
+  sharelatex:
+    container_name: overleaf_sharelatex
+    restart: always
+    image: sharelatex/sharelatex
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "127.0.0.1:8006:80"
+    stop_grace_period: 60s
+    volumes:
+      - /docker/volumes/overleaf/sharelatex_data:/var/lib/overleaf
+    environment:
+      OVERLEAF_APP_NAME: Overleaf Community Edition
+      OVERLEAF_MONGO_URL: mongodb://mongo/sharelatex
+      OVERLEAF_REDIS_HOST: redis
+      REDIS_HOST: redis
+      ENABLED_LINKED_FILE_TYPES: "project_file,project_output_file"
+      ENABLE_CONVERSIONS: "true"
+      EMAIL_CONFIRMATION_DISABLED: "true"
+      OVERLEAF_SITE_URL: ${OVERLEAF_SITE_URL}
+      OVERLEAF_NAV_TITLE: Overleaf Community Edition
+      OVERLEAF_EMAIL_FROM_ADDRESS: ${SMTP_FROM}
+      OVERLEAF_EMAIL_SMTP_HOST: ${SMTP_HOST}
+      OVERLEAF_EMAIL_SMTP_PORT: ${SMTP_PORT}
+      OVERLEAF_EMAIL_SMTP_SECURE: ${SMTP_SECURE}
+      OVERLEAF_EMAIL_SMTP_USER: ${SMTP_USER}
+      OVERLEAF_EMAIL_SMTP_PASS: ${SMTP_PASS}
+      # OVERLEAF_TEMPLATES_USER_ID: "578773160210479700917ee5"
+      # OVERLEAF_NEW_PROJECT_TEMPLATE_LINKS: '[ {"name":"All Templates","url":"/templates/all"}]'
+      # OVERLEAF_PROXY_LEARN: "true"
+
+  mongo:
+    container_name: overleaf_mongo
+    hostname: mongo
+    restart: always
+    image: mongo:6.0
+    command: "--replSet overleaf"
+    volumes:
+      - /docker/volumes/overleaf/mongo_data:/data/db
+      - ./mongodb-init-replica-set.js:/docker-entrypoint-initdb.d/mongodb-init-replica-set.js
+    environment:
+      MONGO_INITDB_DATABASE: sharelatex
+    extra_hosts:
+      # Required when using the automatic database setup for initializing the replica set.
+      # This override is not needed when running the setup after starting up mongo.
+      - mongo:127.0.0.1
+    healthcheck:
+      test: echo 'db.stats().ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    container_name: overleaf_redis
+    hostname: redis
+    restart: always
+    image: redis:6.2
+    volumes:
+      - /docker/volumes/overleaf/redis_data:/data
