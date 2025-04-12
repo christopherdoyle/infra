@@ -91,6 +91,10 @@
       tags:
         - docker
         - overleaf
+    - import_tasks: tasks/docker-joplin.yml
+      tags:
+        - docker
+        - joplin
     - import_tasks: tasks/start-nginx.yml
     - import_tasks: tasks/dnf-automatic.yml
     - import_tasks: tasks/openscap.yml
