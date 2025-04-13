@@ -20,6 +20,8 @@
   roles:
     - role: user_qol
     - role: geerlingguy.firewall
+      tags:
+        - firewall
     - role: geerlingguy.git
     - role: geerlingguy.docker
     - role: geerlingguy.repo-epel
@@ -96,6 +98,8 @@
         - docker
         - joplin
     - import_tasks: tasks/start-nginx.yml
+      tags:
+        - nginx
     - import_tasks: tasks/dnf-automatic.yml
     - import_tasks: tasks/openscap.yml
       tags:
