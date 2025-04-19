@@ -40,5 +40,8 @@ jobs:
           LABELS: patch-saturday,patch,automation
           BODY: |
             ### Patch Saturday
+            - [ ] dnf update
+            - [ ] docker containers: tracked versions
+            - [ ] docker containers: implicit versions
           PINNED: false
           CLOSE_PREVIOUS: true
