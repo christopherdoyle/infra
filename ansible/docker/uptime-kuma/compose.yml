@@ -2,8 +2,49 @@ services:
   uptime-kuma:
     image: louislam/uptime-kuma:1.23.16-debian
     container_name: uptime-kuma
+    hostname: uptimekuma
     restart: always
     ports:
       - "127.0.0.1:8001:3001"
     volumes:
       - /docker/volumes/uptime-kuma:/app/data
+    networks:
+      - uptime-kuma_default
+
+  prom_nginx:
+    image: nginx:alpine
+    hostname: uptimekuma_prom_nginx
+    container_name: uptimekuma_prom_nginx
+    networks:
+      - uptime-kuma_default
+      - prom_bridge
+    restart: always
+    configs:
+      - source: prom_nginx_config
+        target: /etc/nginx/nginx.conf
+
+configs:
+  # UPTIME_KUMA_API_KEY := `echo -n ":API_KEY" | base64
+  prom_nginx_config:
+    content: |
+      worker_processes 1;
+      events {
+        worker_connections 512;
+      }
+      http {
+        server {
+          listen 80;
+          location /metrics {
+            proxy_pass http://uptimekuma:3001/metrics;
+            proxy_set_header Authorization "Basic ${UPTIME_KUMA_API_KEY}";
+          }
+          location / {
+            return 403;
+          }
+        }
+      }
+
+networks:
+  uptime-kuma_default:
+  prom_bridge:
+    external: true
