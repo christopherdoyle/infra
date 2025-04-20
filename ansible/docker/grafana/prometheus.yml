@@ -11,3 +11,9 @@ scrape_configs:
   - job_name: "fail2ban_exporter"
     static_configs:
       - targets: ["fail2ban_exporter:9100"]
+  - job_name: "ente"
+    static_configs:
+      - targets: ["ente_prom_nginx:80"]
+  - job_name: "overleaf"
+    static_configs:
+      - targets: ["overleaf_prom_nginx:80"]

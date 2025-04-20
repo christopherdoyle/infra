@@ -42,6 +42,7 @@ services:
       - /docker/volumes/grafana/prometheus_data:/prometheus
     networks:
       - grafana_bridge
+      - prom_bridge
     restart: always
 
   node-exporter:
@@ -63,4 +64,7 @@ services:
 
 networks:
   grafana_bridge:
+    driver: bridge
+  prom_bridge:
+    name: prom_bridge
     driver: bridge
