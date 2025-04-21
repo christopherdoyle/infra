@@ -13,6 +13,9 @@ services:
     stop_grace_period: 60s
     volumes:
       - /docker/volumes/overleaf/sharelatex_data:/var/lib/overleaf
+      - ./package-list:/package-list:ro
+      - ./sharelatex-init.sh:/sharelatex-init.sh:ro
+    entrypoint: sh /sharelatex-init.sh
     environment:
       OVERLEAF_APP_NAME: Overleaf Community Edition
       OVERLEAF_MONGO_URL: mongodb://mongo/sharelatex
