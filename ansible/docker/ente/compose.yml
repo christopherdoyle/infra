@@ -94,5 +94,38 @@ services:
       - internal
     restart: no
 
+  prom_nginx:
+    image: nginx:alpine
+    hostname: ente_prom_nginx
+    container_name: ente_prom_nginx
+    networks:
+      - internal
+      - prom_bridge
+    restart: always
+    configs:
+      - source: prom_nginx_config
+        target: /etc/nginx/nginx.conf
+
+configs:
+  prom_nginx_config:
+    content: |
+      worker_processes 1;
+      events {
+        worker_connections 512;
+      }
+      http {
+        server {
+          listen 80;
+          location /metrics {
+            proxy_pass http://ente_museum:2112/metrics;
+          }
+          location / {
+            return 403;
+          }
+        }
+      }
+
 networks:
   internal:
+  prom_bridge:
+    external: true
