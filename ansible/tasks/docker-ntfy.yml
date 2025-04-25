@@ -1,0 +1,24 @@
+- name: Create ntfy folders
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - /docker/compose/ntfy
+    - /docker/volumes/ntfy
+
+- name: Copy ntfy folder
+  ansible.builtin.copy:
+    src: ./docker/ntfy/
+    dest: /docker/compose/ntfy/
+    mode: "0644"
+
+- name: Shutdown service
+  ansible.builtin.shell: |
+    cd /docker/compose/ntfy
+    docker compose down
+
+- name: Start service
+  ansible.builtin.shell: |
+    cd /docker/compose/ntfy
+    docker compose up -d
