@@ -16,6 +16,10 @@ https://hub.docker.com/_/redis/tags
 
 https://hub.docker.com/r/joplin/server/tags
 
+### Ntfy
+
+https://hub.docker.com/r/binwiederhier/ntfy/tags
+
 ### Uptime Kuma
 
 https://hub.docker.com/r/louislam/uptime-kuma/tags
