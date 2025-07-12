@@ -35,7 +35,7 @@ services:
 
   prometheus:
     container_name: grafana_prometheus
-    image: prom/prometheus:v3.4.1
+    image: prom/prometheus:v3.4.2
     user: ${DOCKER_USER}
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
