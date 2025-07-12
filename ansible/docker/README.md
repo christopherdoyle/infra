@@ -10,7 +10,6 @@ docker compose up -d
 https://hub.docker.com/r/grafana/grafana/tags
 https://hub.docker.com/r/prom/prometheus/tags
 https://hub.docker.com/r/prom/node-exporter/tags
-https://hub.docker.com/_/redis/tags
 
 ### Joplin
 
