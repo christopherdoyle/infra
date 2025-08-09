@@ -101,6 +101,10 @@
       tags:
         - docker
         - ntfy
+    - import_tasks: tasks/docker-headscale.yml
+      tags:
+        - docker
+        - headscale
     - import_tasks: tasks/start-nginx.yml
       tags:
         - nginx
