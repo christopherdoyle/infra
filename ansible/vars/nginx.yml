@@ -38,5 +38,9 @@ nginx_vhosts:
     state: "present"
     template: "proxy.j2"
     proxy_port: 8008
+  - server_name: xscale.{{ hostname }}
+    state: "present"
+    template: "proxy.j2"
+    proxy_port: 8009
 nginx_service_state: started
 nginx_service_enabled: true
