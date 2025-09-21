@@ -1,7 +1,7 @@
 services:
   exporter:
     container_name: fail2ban_exporter
-    image: christopherdoyle/fail2ban-geo-exporter:0.0.1
+    image: christopherdoyle/fail2ban-geo-exporter:0.0.3
     restart: always
     volumes:
       - /etc/fail2ban:/etc/fail2ban:ro
