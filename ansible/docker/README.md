@@ -11,6 +11,10 @@ https://hub.docker.com/r/grafana/grafana/tags
 https://hub.docker.com/r/prom/prometheus/tags
 https://hub.docker.com/r/prom/node-exporter/tags
 
+### Headscale
+
+https://hub.docker.com/r/headscale/headscale/tags
+
 ### Joplin
 
 https://hub.docker.com/r/joplin/server/tags
