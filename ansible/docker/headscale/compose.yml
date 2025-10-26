@@ -1,6 +1,6 @@
 services:
   headscale:
-    image: docker.io/headscale/headscale:sha-474ea236
+    image: docker.io/headscale/headscale:v0.26.1
     container_name: headscale_headscale
     restart: unless-stopped
     volumes:
