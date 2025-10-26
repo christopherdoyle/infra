@@ -13,7 +13,7 @@ services:
   grafana:
     container_name: grafana_grafana
     hostname: grafana
-    image: grafana/grafana:12.1.1
+    image: grafana/grafana:12.2.1
     user: ${DOCKER_USER}
     ports:
       - "127.0.0.1:8002:3000"
@@ -35,7 +35,7 @@ services:
 
   prometheus:
     container_name: grafana_prometheus
-    image: prom/prometheus:v3.5.0
+    image: prom/prometheus:v3.7.2
     user: ${DOCKER_USER}
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -47,7 +47,7 @@ services:
 
   node-exporter:
     container_name: grafana_node_exporter
-    image: prom/node-exporter:v1.9.1
+    image: prom/node-exporter:v1.10.2
     user: ${DOCKER_USER}
     restart: always
     volumes:
