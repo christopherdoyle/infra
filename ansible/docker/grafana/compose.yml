@@ -13,7 +13,7 @@ services:
   grafana:
     container_name: grafana_grafana
     hostname: grafana
-    image: grafana/grafana:12.2.1
+    image: grafana/grafana:12.3
     user: ${DOCKER_USER}
     ports:
       - "127.0.0.1:8002:3000"
